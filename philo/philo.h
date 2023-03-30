@@ -6,7 +6,7 @@
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 15:41:56 by qtran             #+#    #+#             */
-/*   Updated: 2023/03/28 18:36:54 by qtran            ###   ########.fr       */
+/*   Updated: 2023/03/30 14:09:09 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,12 @@
 # define PHILO_H
 
 # include <pthread.h>
+# include <stdio.h>
+# include <stdlib.h>
 # include <sys/time.h>
 # include <unistd.h>
 
 //Structures
-
-
-
-
-
-
 
 typedef struct s_data
 {
@@ -40,24 +36,32 @@ typedef struct s_data
 
 typedef struct s_philo
 {
-	int				num;
-    int             l_fork;
-    int             r_fork;
-	int				t_last_meal; //timestamp
+	int				name;
+	pthread_mutex_t	l_fork;
+	pthread_mutex_t	r_fork;
+	int t_last_meal; //timestamp
 	int				meals;
-    t_data          *data;
+	t_data			*data;
 }					t_philo;
 
+//currently in main
 
-//init.c
-int					input_check(char **av);
-void				create_threads(t_data *data);
+void create_threads(t_data *data, t_philo *philos);
+// void	create_threads(t_data *data);
 void				join_threads(t_data *data);
 void				init_all_mutex(t_data *data);
 void				destroy_all_mutex(t_data *data);
 
+//init.c
+void				init_data(char **av, t_data *data);
+int					input_check(char **av);
+void				init_philos(t_data *data, t_philo *philos);
+
 //routine.c
-void				*routine(t_data *data);
+void				*routine(void *philo);
+
+//input_check.c
+int					input_check(char **av);
 
 //ft_atoi
 int					ft_atoi(const char *str);

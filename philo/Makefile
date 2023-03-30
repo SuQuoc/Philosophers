@@ -1,8 +1,8 @@
 NAME		= philo
-ARGV		= infile "ls -l" "wc -l" outfile
+ARGV		= 4 100 20 50
 
 CC			= cc
-CFLAGS		= -Wall -Werror -Wextra -pthread
+CFLAGS		= -Wall -Werror -Wextra -pthread -g
 #-pthread
 
 SRC_PATH 	= src
@@ -12,7 +12,8 @@ SRC			= 	main.c \
 				init.c \
 				ft_atoi.c \
 				ft_strlen.c \
-				routine.c
+				routine.c \
+				input_check.c
 
 SRCS 		= $(addprefix $(SRC_PATH)/, $(SRC))
 OBJ 		= $(SRC:.c=.o)
@@ -56,7 +57,7 @@ va: re
 	valgrind --leak-check=full \
 	--show-leak-kinds=all \
 	--track-origins=yes \
-	./$(NAME) $(DYN_ARGV)
+	./$(NAME) $(ARGV)
 
 debug : CFLAGS += -g
 debug : fclean all
