@@ -6,7 +6,7 @@
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 12:56:03 by qtran             #+#    #+#             */
-/*   Updated: 2023/03/30 14:20:50 by qtran            ###   ########.fr       */
+/*   Updated: 2023/03/31 18:50:23 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void init_data(char **av, t_data *data)
 {
     data->n_philos = ft_atoi(av[1]);
     data->forks = data->n_philos;
+    data->t_start = 
     data->t_die = ft_atoi(av[2]);
     data->t_eat = ft_atoi(av[3]);
     data->t_sleep = ft_atoi(av[4]);
@@ -35,18 +36,46 @@ void init_all_mutex(t_data *data)
 {
     int i;
 
-    data->mutex = malloc(sizeof(pthread_mutex_t) * data->n_philos); //reserving mem for forks
+    data->mutex = malloc(sizeof(pthread_mutex_t *) * data->n_philos); //reserving mem for forks
     i = 0;
     while (i < data->n_philos)
     {
-        pthread_mutex_init(&data->mutex[i], NULL);
+        data->mutex[i] = malloc(sizeof(pthread_mutex_t));
+        pthread_mutex_init(data->mutex[i], NULL);
         i++;
     }
 }
 
 
+void init_one_pinoy_boy(t_data *data, t_philo *philos, int i)
+{
+    philos[i].name = i + 1;
+    philos[i].r_fork = data->mutex[i];
+    philos[i].rr_fork = i;
+    if (i == 0)
+    {
+        philos[i].l_fork = data->mutex[data->n_philos - 1];
+        philos[i].ll_fork = data->n_philos - 1;
+    }
+    else
+    {
+        philos[i].l_fork = data->mutex[i - 1]; 
+        philos[i].ll_fork = i - 1; 
+    }
+    philos[i].t_last_meal = -1;
+    philos[i].meals = 0;
+    philos[i].data = data;
+
+    //time shit
+    philos[i].timestamp_in_ms = -1;
+    philos[i].get_t_of_day.tv_sec = -1;
+    philos[i].get_t_of_day.tv_usec = -1; 
+}
 
 
+
+
+/*
 void init_philos(t_data *data, t_philo *philos)
 {
     int i;
@@ -58,15 +87,21 @@ void init_philos(t_data *data, t_philo *philos)
         philos[i].name = i + 1;
         philos[i].r_fork = data->mutex[i];
         if (i == 0)
+        {
             philos[i].l_fork = data->mutex[data->n_philos - 1 - 1];
+            philos[i].ll_fork = data->n_philos - 1 - 1;
+        }
         else
+        {
             philos[i].l_fork = data->mutex[i - 1]; 
+            philos[i].ll_fork = i - 1; 
+        }
         philos[i].t_last_meal = -1;
         philos[i].meals = 0;
         philos[i].data = data;
         i++;
     }
-}
+}*/
 
 
 
