@@ -6,14 +6,14 @@
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 18:18:33 by qtran             #+#    #+#             */
-/*   Updated: 2023/03/31 19:03:00 by qtran            ###   ########.fr       */
+/*   Updated: 2023/04/05 14:29:18 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
 
-void take_fork_test(t_philo *philo)
+void take_fork_test(t_philo *philo) //first routine tests
 {
     //printf("Philo number %d\n", philo->name);
     //printf("Philo number %d right fork: %p\n", philo->name, philo->r_fork);
@@ -59,50 +59,131 @@ void take_fork_test(t_philo *philo)
 }
 
 
-void set_timestamp_in_ms(t_philo *ptr) //sets the timestamp relative to the start
+void philo_eats(t_philo *philo)
 {
-    gettimeofday(&ptr->get_t_of_day, NULL);
-    ptr->timestamp_in_ms = ptr->get_t_of_day.tv_sec * 1000 + ptr->get_t_of_day.tv_usec / 1000 - ptr->data->t_start; 
-}
-
-void set_start_timestamp_in_ms(t_data *ptr)
-{
-    gettimeofday(&ptr->get_t_of_day, NULL);
-    ptr->t_start = ptr->get_t_of_day.tv_sec * 1000 + ptr->get_t_of_day.tv_usec / 1000; 
-}
-
-
-void eats(t_philo *philo)
-{
+    int eating_time;
+    pthread_mutex_lock(philo->data->death_lock);//LOCK
+    get_time_in_ms(&philo->t_in_ms);
+    set_rel_timestamp(philo);
+    printf("%lld Philosopher %d is eating\n", philo->timestamp, philo->name);
+    eating_time = philo->data->t_eat;
+    pthread_mutex_unlock(philo->data->death_lock);//UNLOCK
     
+    
+    usleep(eating_time * 1000);
+    
+    pthread_mutex_lock(philo->data->death_lock);//LOCK
+    get_time_in_ms(&philo->t_in_ms);
+    set_rel_timestamp(philo);
+    philo->last_meal = philo->timestamp;
+    philo->meals++;
+    pthread_mutex_unlock(philo->data->death_lock);//UNLOCK
+
 }
 
 void grab_first_fork_if_w_grab_second(t_philo *philo, pthread_mutex_t *first, pthread_mutex_t *sec)
 {
-    if (pthread_mutex_lock(first) == 0)
-    {
-        set_timestamp_in_ms(philo);
-        printf("%lld Philo number %d grabed first fork: %p\n", philo->timestamp_in_ms, philo->name, first);
-        if (pthread_mutex_lock(sec) == 0)
-        {
-            printf("%lld Philo number %d grabed sec fork: %p\n", philo->timestamp_in_ms, philo->name, sec);
-            printf("-------------------\n");
-            printf("%lld Philo number %d grabed sec fork: %p\n", philo->timestamp_in_ms, philo->name, sec);
-            if (pthread_mutex_unlock(sec) == 0)
-                printf("Philo number %d gave back sec fork: %p\n", philo->name, sec);
-        }
-        if (pthread_mutex_unlock(first) == 0)
-            printf("Philo number %d gave back first fork: %p\n", philo->name, first);
-    }
+    pthread_mutex_lock(first); //LOCK
+    get_time_in_ms(&philo->t_in_ms);
+    set_rel_timestamp(philo);
+    printf("%lld Philo number %d grabed first fork\n", philo->timestamp, philo->name);      
+    //printf("%lld Philo number %d grabed first fork: %p\n", philo->timestamp, philo->name, first);
+    pthread_mutex_lock(sec); //LOCK
+
+    get_time_in_ms(&philo->t_in_ms);
+    set_rel_timestamp(philo);
+    printf("%lld Philo number %d grabed sec fork\n", philo->timestamp, philo->name);      
+    //printf("%lld Philo number %d grabed sec fork: %p\n", philo->timestamp, philo->name, sec);
+    philo_eats(philo);
+    
+    pthread_mutex_unlock(sec);//UNLOCK   
+    pthread_mutex_unlock(first);//UNLOCK
+    
+    //if (pthread_mutex_lock(first) == 0) //LOCK
+    //{
+    //    get_time_in_ms(&philo->t_in_ms);
+    //    set_rel_timestamp(philo);
+    //    printf("%lld Philo number %d grabed first fork\n", philo->timestamp, philo->name);      
+    //    //printf("%lld Philo number %d grabed first fork: %p\n", philo->timestamp, philo->name, first);
+    //    if (pthread_mutex_lock(sec) == 0)
+    //    {
+    //        get_time_in_ms(&philo->t_in_ms);
+    //        set_rel_timestamp(philo);
+    //        printf("%lld Philo number %d grabed sec fork\n", philo->timestamp, philo->name);      
+    //        //printf("%lld Philo number %d grabed sec fork: %p\n", philo->timestamp, philo->name, sec);
+    //        philo_eats(philo);
+    //        pthread_mutex_unlock(sec);
+    //    }
+    //    pthread_mutex_unlock(first);
+    //}
 }
 
 
 
-void take_fork(t_philo *philo)
+void philo_sleeps(t_philo *philo)
+{
+    
+    pthread_mutex_lock(philo->data->death_lock); //LOCK
+    
+    printf("%lld Philo number %d is sleeping\n", philo->timestamp, philo->name);
+    pthread_mutex_unlock(philo->data->death_lock); //UNLOCK
+    
+    usleep(philo->data->t_sleep * 1000);
+}
+
+
+void philo_thinks(t_philo *philo)
+{
+    pthread_mutex_lock(philo->data->death_lock); //LOCK
+    
+    get_time_in_ms(&philo->t_in_ms);
+    set_rel_timestamp(philo);
+    printf("%lld Philo number %d is thinking\n", philo->timestamp, philo->name);
+
+    pthread_mutex_unlock(philo->data->death_lock); //UNLOCK
+}
+
+void *routine(void *ptr)
+{
+    t_philo *philo;
+    
+    philo = (t_philo *)ptr;
+
+   
+    while(all_alive(philo->data) == 0)
+    {    
+        //check_death(philo); 
+        if (philo->name % 2 != 0)
+        {
+            grab_first_fork_if_w_grab_second(philo, philo->r_fork, philo->l_fork);
+            //if (grab_first_fork_if_w_grab_second(philo, philo->r_fork, philo->l_fork) == 1);
+            philo_sleeps(philo);
+            philo_thinks(philo);
+        }
+        else
+        {
+            grab_first_fork_if_w_grab_second(philo, philo->l_fork, philo->r_fork);
+            philo_sleeps(philo);
+            philo_thinks(philo);
+        }
+    }
+    //free(philo);
+    return (NULL);
+}
+
+
+
+
+
+
+void take_fork(t_philo *philo) //überflüssig jz --> routine
 {
     if (philo->name % 2 != 0)
     {
         grab_first_fork_if_w_grab_second(philo, philo->r_fork, philo->l_fork);
+        //if (grab_first_fork_if_w_grab_second(philo, philo->r_fork, philo->l_fork) == 1);
+            //philo_sleeps(philo);
+            //philo_thinks(philo);
     }
 
     else
@@ -115,29 +196,3 @@ void take_fork(t_philo *philo)
     //    printf("Take fork\n");
     //
     //pthread_mutex_unlock(&mutex);
-
-
-void *routine(void *philo)
-{
-    take_fork(philo);
-    //printf("Philo number %d\n", (t_philo *)philo->name);
-    return (philo);
-    //eating()
-//        
-//            l_fork;
-//        else
-//            r_fork;
-//        usleep(data->t_die * 1000);
-//        printf("eating\n");//take forks
-//        //eat
-//        //put forks back
-//        
-//        
-//        
-//        
-//    //sleeping()
-//        usleep(data->t_sleep * 1000);
-//        printf("sleeping\n");
-//    //thinking()
-//        printf("thinking\n"); //thinkin nur weil sie auf essen warten
-}

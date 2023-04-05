@@ -1,6 +1,6 @@
 NAME		= philo
-ARGV		= 4 100 20 50
-
+ARGV		= 4 400 200 300
+#n_philos, t_die, t_eat, t_sleep, 
 CC			= cc
 CFLAGS		= -Wall -Werror -Wextra -pthread -g
 #-pthread
@@ -13,7 +13,10 @@ SRC			= 	main.c \
 				ft_atoi.c \
 				ft_strlen.c \
 				routine.c \
-				input_check.c
+				input_check.c \
+				threads_and_mutex.c \
+				death_things.c \
+				time_utils.c 
 
 SRCS 		= $(addprefix $(SRC_PATH)/, $(SRC))
 OBJ 		= $(SRC:.c=.o)
@@ -57,6 +60,11 @@ va: re
 	valgrind --leak-check=full \
 	--show-leak-kinds=all \
 	--track-origins=yes \
+	./$(NAME) $(ARGV)
+
+
+hel: re
+	valgrind --tool=helgrind \
 	./$(NAME) $(ARGV)
 
 debug : CFLAGS += -g
