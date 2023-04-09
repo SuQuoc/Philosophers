@@ -6,7 +6,7 @@
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 12:56:03 by qtran             #+#    #+#             */
-/*   Updated: 2023/04/07 18:27:58 by qtran            ###   ########.fr       */
+/*   Updated: 2023/04/07 12:56:23 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,14 @@ void init_one_pinoy_boy(t_data *data, t_philo *philos, int i)
     else
         philos[i].l_fork = &data->forks[i - 1]; 
     
+    //shared either with main or death check thread
     philos[i].meals = 0;
     philos[i].last_meal = data->t_start_in_ms;
+    philos[i].data = data;
     philos[i].t_start_in_ms = data->t_start_in_ms;
     philos[i].t_in_ms = -1;
     philos[i].timestamp = 0;
     philos[i].time_to_die = data->t_die;
-    philos[i].data = data;
 }
 
 

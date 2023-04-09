@@ -1,28 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   time_utils.c                                       :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/04 16:01:26 by qtran             #+#    #+#             */
-/*   Updated: 2023/04/07 12:52:40 by qtran            ###   ########.fr       */
+/*   Created: 2022/10/08 16:38:48 by qtran             #+#    #+#             */
+/*   Updated: 2023/03/28 17:51:15 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-void get_time_in_ms(long long *time_in_ms)
-{
-    struct timeval t_of_day;
-    gettimeofday(&t_of_day, NULL);
-    *time_in_ms = t_of_day.tv_sec * 1000 + t_of_day.tv_usec / 1000;
-}
 
-void set_rel_timestamp(t_philo *philo)
+size_t	ft_strlen(const char *s)
 {
-    if (philo == NULL || philo->data == NULL)
-        return;
-    get_time_in_ms(&philo->t_in_ms);
-    philo->timestamp = philo->t_in_ms - philo->t_start_in_ms;
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		i++;
+	}
+	return (i);
 }

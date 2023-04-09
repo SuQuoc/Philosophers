@@ -6,7 +6,7 @@
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 15:41:56 by qtran             #+#    #+#             */
-/*   Updated: 2023/04/09 17:54:28 by qtran            ###   ########.fr       */
+/*   Updated: 2023/04/07 17:19:57 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,6 @@ void grab_first_fork_if_w_grab_second(t_philo *philo, pthread_mutex_t *first, pt
 int all_alive(t_data *ptr);
 void check_death(t_philo *philo);
 void *look_if_died(void *ptr);
-
-int all_alive2(t_data *ptr);
 
 
 

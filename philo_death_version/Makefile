@@ -1,5 +1,5 @@
 NAME		= philo
-ARGV		= 5 350 400 100
+ARGV		= 4 200 400 200
 #n_philos, t_die, t_eat, t_sleep,
 CC			= cc
 CFLAGS		= -Wall -Werror -Wextra -pthread -g
