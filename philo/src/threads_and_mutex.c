@@ -6,7 +6,7 @@
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 16:15:34 by qtran             #+#    #+#             */
-/*   Updated: 2023/04/07 13:38:04 by qtran            ###   ########.fr       */
+/*   Updated: 2023/04/11 17:42:17 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ void destroy_all_mutex(t_data *data)
         pthread_mutex_destroy(&data->forks[i]);
         i++;
     }
+    //pthread_mutex_lock(&data->death_lock);//
+    //pthread_mutex_unlock(&data->death_lock);//
+
     pthread_mutex_destroy(&data->death_lock);
     pthread_mutex_destroy(&data->time_print_lock);
 }
@@ -36,7 +39,7 @@ void create_threads(t_data *data, t_philo *philos)
     err = "Error, failed to create thread\n";
     i = 0;
     get_time_in_ms(&data->t_start_in_ms);
-    printf("Start time in ms FROM MAIN: %lld\n", data->t_start_in_ms);
+    //printf("Start time in ms FROM MAIN: %lld\n", data->t_start_in_ms);
     while(i < data->n_philos)
     {
         init_one_pinoy_boy(data, philos, i);

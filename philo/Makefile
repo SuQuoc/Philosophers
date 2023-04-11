@@ -1,9 +1,18 @@
 NAME		= philo
-ARGV		= 5 350 400 100
+ARGV		= 4 310 200 100#
+ARGV		= 4 310 200 200#
+ARGV		= 7 420 200 200#variabel
+ARGV		= 1 800 200 200#
+ARGV		= 5 800 200 200 #
+ARGV		= 5 800 200 200 7# 
+ARGV		= 4 410 200 200#
+
+
+
+
 #n_philos, t_die, t_eat, t_sleep,
 CC			= cc
 CFLAGS		= -Wall -Werror -Wextra -pthread -g
-#-pthread
 
 SRC_PATH 	= src
 OBJ_PATH 	= obj
@@ -16,7 +25,7 @@ SRC			= 	main.c \
 				input_check.c \
 				threads_and_mutex.c \
 				death_things.c \
-				time_utils.c 
+				time_utils.c
 
 SRCS 		= $(addprefix $(SRC_PATH)/, $(SRC))
 OBJ 		= $(SRC:.c=.o)
@@ -69,6 +78,11 @@ hel: re
 #--tool=helgrind \
 #-s \
 #./$(NAME) $(ARGV)
+
+
+
+drd: re
+	valgrind -s --tool=drd --show-below-main=yes ./$(NAME) $(ARGV)
 
 debug : CFLAGS += -g
 debug : fclean all

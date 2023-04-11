@@ -6,7 +6,7 @@
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 15:41:56 by qtran             #+#    #+#             */
-/*   Updated: 2023/04/09 17:54:28 by qtran            ###   ########.fr       */
+/*   Updated: 2023/04/11 13:21:07 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ typedef struct s_data
 typedef struct s_philo
 {
 	int				name;
-	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
+	pthread_mutex_t	*l_fork;
 	int				meals;
 	int				time_to_die;
 	long long		t_start_in_ms;
@@ -49,6 +49,12 @@ typedef struct s_philo
 	unsigned int	timestamp; //t_start - t_in_ms; only for printing
 	t_data			*data;
 }					t_philo;
+
+
+//main.c
+void protected_print(t_philo *philo, char *msg);
+
+
 
 //threads and mutex
 void				create_threads(t_data *data, t_philo *philos);
