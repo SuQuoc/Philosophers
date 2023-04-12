@@ -6,24 +6,16 @@
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 13:58:09 by qtran             #+#    #+#             */
-/*   Updated: 2023/04/11 17:14:40 by qtran            ###   ########.fr       */
+/*   Updated: 2023/04/12 15:59:09 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 #include <stdio.h>
 
-void	protected_print(t_philo *philo, char *msg)
-{
-	if (all_alive2(philo->data))
-	{
-		pthread_mutex_lock(&philo->data->time_print_lock);
-		set_rel_timestamp(philo);
-		printf("%u %d %s\n", philo->timestamp, philo->name, msg);
-		pthread_mutex_unlock(&philo->data->time_print_lock);
-	}
-	return ;
-}
+
+
+
 
 int	main(int ac, char **av)
 {
@@ -31,6 +23,11 @@ int	main(int ac, char **av)
 	t_philo	*philos;
 
 	if (ac < 5 || ac > 6 || input_check(av) == 1)
+	{
+		printf("Error input incorrect!\n");
+		return (0);
+	}
+	if (check_lonely_philo_main(av))
 		return (0);
 	init_data(av, &data);
 	philos = malloc(sizeof(t_philo) * data.n_philos);
