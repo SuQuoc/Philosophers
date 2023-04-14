@@ -6,16 +6,12 @@
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 13:58:09 by qtran             #+#    #+#             */
-/*   Updated: 2023/04/12 15:59:09 by qtran            ###   ########.fr       */
+/*   Updated: 2023/04/14 16:46:12 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 #include <stdio.h>
-
-
-
-
 
 int	main(int ac, char **av)
 {

@@ -6,7 +6,7 @@
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 15:41:56 by qtran             #+#    #+#             */
-/*   Updated: 2023/04/12 16:00:32 by qtran            ###   ########.fr       */
+/*   Updated: 2023/04/14 16:50:43 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,10 @@ int					check_if_full_from_eating(t_philo *philo);
 //routine_2.c
 void				philo_eats(t_philo *philo, pthread_mutex_t *first,
 						pthread_mutex_t *sec);
-void	grab_first_fork_if_w_grab_second(t_philo *philo,
-										pthread_mutex_t *first,
-										pthread_mutex_t *sec);
-void	give_forks_back(pthread_mutex_t *first,
+void				grab_first_fork_if_w_grab_second(t_philo *philo,
+						pthread_mutex_t *first,
+						pthread_mutex_t *sec);
+void				give_forks_back(pthread_mutex_t *first,
 						pthread_mutex_t *sec);
 void				philo_sleeps(t_philo *philo);
 void				protected_print(t_philo *philo, char *msg);
@@ -93,7 +93,7 @@ int					input_check(char **av);
 int					check_lonely_philo_main(char **av);
 
 //others
-int					ft_atoi(const char *str);
+long long int		ft_atoi(const char *str);
 size_t				ft_strlen(const char *s);
 
 #endif

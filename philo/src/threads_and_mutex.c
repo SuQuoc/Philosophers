@@ -6,7 +6,7 @@
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 16:15:34 by qtran             #+#    #+#             */
-/*   Updated: 2023/04/12 15:02:40 by qtran            ###   ########.fr       */
+/*   Updated: 2023/04/14 16:38:43 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	destroy_all_mutex(t_data *data)
 		pthread_mutex_destroy(&data->forks[i]);
 		i++;
 	}
+	pthread_mutex_lock(&data->death_lock);
+	pthread_mutex_unlock(&data->death_lock);
 	pthread_mutex_destroy(&data->death_lock);
 	pthread_mutex_destroy(&data->time_print_lock);
 }

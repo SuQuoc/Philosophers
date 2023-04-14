@@ -6,7 +6,7 @@
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 18:05:17 by qtran             #+#    #+#             */
-/*   Updated: 2022/12/30 16:48:02 by qtran            ###   ########.fr       */
+/*   Updated: 2023/04/14 15:16:24 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int	ft_atoi(const char *str)
+long long int	ft_atoi(const char *str)
 {
 	int				i;
 	int				sign;

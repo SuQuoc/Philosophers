@@ -1,10 +1,10 @@
 NAME		= philo
-ARGV		= 5 800 200 200 #
 ARGV		= 4 410 200 200#
-ARGV		= 1 800 200 200#
+ARGV		= 5 410 200 200#variabel
 ARGV		= 4 310 200 100#one should die
-ARGV		= 5 700 200 200 7#
-ARGV		= 5 420 200 200#variabel
+ARGV		= 5 700 200 200 3#
+ARGV		= 5 800 200 200#
+ARGV		= 1 2000 200 200#
 
 
 

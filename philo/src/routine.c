@@ -6,7 +6,7 @@
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 18:18:33 by qtran             #+#    #+#             */
-/*   Updated: 2023/04/12 15:49:13 by qtran            ###   ########.fr       */
+/*   Updated: 2023/04/14 17:17:15 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,27 +41,21 @@ void	*routine(void *ptr)
 	pthread_t	death_checker;
 
 	philo = (t_philo *)ptr;
-	pthread_create(&death_checker, NULL, &look_if_died, philo);
 	while (all_alive2(philo->data))
 	{
+		pthread_create(&death_checker, NULL, &look_if_died, philo);
 		if (philo->name % 2 != 0)
 		{
 			if (eat_sleep_think(philo, philo->r_fork, philo->l_fork))
-			{
-				pthread_join(death_checker, NULL);
-				return (NULL);
-			}
+				return (pthread_detach(death_checker), NULL);
 		}
 		else
 		{
 			usleep(1000);
 			if (eat_sleep_think(philo, philo->l_fork, philo->r_fork))
-			{
-				pthread_join(death_checker, NULL);
-				return (NULL);
-			}
+				return (pthread_detach(death_checker), NULL);
 		}
+		pthread_detach(death_checker);
 	}
-	pthread_join(death_checker, NULL);
 	return (NULL);
 }
