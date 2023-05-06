@@ -1,1 +1,5 @@
-42_repo
+recipe.c
+philo_42_git/
+philo/.vscode
+.vscode
+obj/

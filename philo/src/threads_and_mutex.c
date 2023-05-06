@@ -6,63 +6,58 @@
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/03 16:15:34 by qtran             #+#    #+#             */
-/*   Updated: 2023/04/17 14:18:21 by qtran            ###   ########.fr       */
+/*   Updated: 2023/04/27 10:58:05 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-void	destroy_all_mutex(t_data *data)
+int	destroy_all_mutex(t_data *data)
 {
 	int	i;
 
 	i = 0;
 	while (i < data->n_philos)
 	{
-		pthread_mutex_destroy(&data->forks[i]);
+		if (pthread_mutex_destroy(&data->forks[i]) != 0)
+			return (1);
 		i++;
 	}
-	pthread_mutex_lock(&data->death_lock);
-	pthread_mutex_unlock(&data->death_lock);
-	pthread_mutex_destroy(&data->death_lock);
-	pthread_mutex_destroy(&data->time_print_lock);
+	pthread_mutex_lock(&data->time_print_lock);
+	pthread_mutex_unlock(&data->time_print_lock);
+	if (pthread_mutex_destroy(&data->death_lock) != 0)
+		return (1);
+	if (pthread_mutex_destroy(&data->time_print_lock) != 0)
+		return (1);
+	return (0);
 }
-//pthread_mutex_lock(&data->death_lock);//
-//pthread_mutex_unlock(&data->death_lock);//
 
-void	create_threads(t_data *data, t_philo *philos)
+int	create_threads(t_data *data, t_philo *philos)
 {
-	char	*err;
-	int		i;
-
-	err = "Error, failed to create thread\n";
-	i = 0;
 	get_time_in_ms(&data->t_start_in_ms);
-	while (i < data->n_philos)
-	{
-		init_one_pinoy_boy(data, philos, i);
-		i++;
-	}
-	i = 0;
-	while (i < data->n_philos)
-	{
-		if (pthread_create(&data->th[i], NULL, &routine, &philos[i]) != 0)
-			write(2, err, ft_strlen(err));
-		i++;
-	}
+	if (create_odd_threads(data, philos) != 0)
+		return (1);
+	usleep(1000);
+	if (create_even_threads(data, philos) != 0)
+		return (1);
+	return (0);
 }
 
-void	join_threads(t_data *data)
+int	join_n_threads(t_data *data, int n)
 {
 	int		i;
 	char	*err;
 
 	err = "Error, failed to join thread\n";
 	i = 0;
-	while (i < data->n_philos)
+	while (i < n)
 	{
 		if (pthread_join(data->th[i], NULL) != 0)
+		{
 			write(2, err, ft_strlen(err));
+			return (1);
+		}
 		i++;
 	}
+	return (0);
 }

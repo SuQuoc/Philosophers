@@ -6,7 +6,7 @@
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 12:56:03 by qtran             #+#    #+#             */
-/*   Updated: 2023/04/14 15:19:37 by qtran            ###   ########.fr       */
+/*   Updated: 2023/04/26 10:58:46 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <pthread.h>
 #include <unistd.h>
 
-void	init_data(char **av, t_data *data)
+int	init_data(char **av, t_data *data)
 {
 	data->n_philos = ft_atoi(av[1]);
 	data->t_start_in_ms = -1;
@@ -27,22 +27,29 @@ void	init_data(char **av, t_data *data)
 	else
 		data->n_meals = 0;
 	data->th = (pthread_t *)malloc(sizeof(pthread_t) * data->n_philos);
+	if (data->th == NULL)
+		return (1);
 	init_all_fork_mutex(data);
 	pthread_mutex_init(&data->death_lock, NULL);
 	pthread_mutex_init(&data->time_print_lock, NULL);
+	return (0);
 }
 
-void	init_all_fork_mutex(t_data *data)
+int	init_all_fork_mutex(t_data *data)
 {
 	int	i;
 
 	data->forks = malloc(sizeof(pthread_mutex_t) * data->n_philos);
+	if (data->forks == NULL)
+		return (free_everything(data, NULL), 1);
 	i = 0;
 	while (i < data->n_philos)
 	{
-		pthread_mutex_init(&data->forks[i], NULL);
+		if (pthread_mutex_init(&data->forks[i], NULL) != 0)
+			return (free_everything(data, NULL), 1);
 		i++;
 	}
+	return (0);
 }
 
 void	init_one_pinoy_boy(t_data *data, t_philo *philos, int i)

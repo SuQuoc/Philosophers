@@ -6,7 +6,7 @@
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 14:48:37 by qtran             #+#    #+#             */
-/*   Updated: 2023/04/12 16:11:23 by qtran            ###   ########.fr       */
+/*   Updated: 2023/04/26 13:36:44 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 void	philo_sleeps(t_philo *philo)
 {
 	protected_print(philo, "is sleeping");
-	usleep(philo->data->t_sleep * 1000);
+	if (all_alive2(philo->data))
+		usleep(philo->data->t_sleep * 1000);
 }
 
 void	philo_eats(t_philo *philo, pthread_mutex_t *first, pthread_mutex_t *sec)
@@ -29,18 +30,23 @@ void	philo_eats(t_philo *philo, pthread_mutex_t *first, pthread_mutex_t *sec)
 	philo->last_meal = philo->t_in_ms;
 	eating_time = philo->data->t_eat;
 	pthread_mutex_unlock(&philo->data->time_print_lock);
-	usleep(eating_time * 1000);
 	pthread_mutex_lock(&philo->data->death_lock);
-	philo->meals++;
-	pthread_mutex_unlock(&philo->data->death_lock);
+	if (philo->data->death_bool == 0)
+	{
+		philo->meals++;
+		pthread_mutex_unlock(&philo->data->death_lock);
+		usleep(eating_time * 1000);
+	}
+	else
+		pthread_mutex_unlock(&philo->data->death_lock);
 	give_forks_back(first, sec);
 }
 
 void	grab_first_fork_if_w_grab_second(t_philo *philo, pthread_mutex_t *first,
 		pthread_mutex_t *sec)
 {
-	pthread_mutex_lock(first);
 	pthread_mutex_lock(sec);
+	pthread_mutex_lock(first);
 	if (all_alive2(philo->data))
 	{
 		pthread_mutex_lock(&philo->data->time_print_lock);
@@ -67,5 +73,4 @@ void	protected_print(t_philo *philo, char *msg)
 		printf("%u %d %s\n", philo->timestamp, philo->name, msg);
 		pthread_mutex_unlock(&philo->data->time_print_lock);
 	}
-	return ;
 }

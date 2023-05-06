@@ -1,12 +1,11 @@
 NAME		= philo
-ARGV		= 5 410 200 200#variabel
-ARGV		= 4 310 200 100#one should die
+
+ARGV		= 2 180 200 200#
 ARGV		= 1 2000 200 200#
 ARGV		= 5 800 200 200#
-ARGV		= 5 800 200 200 7#
-ARGV		= 2 180 200 200#
-
-
+ARGV		= 4 410 200 200#variabel
+ARGV		= 4 400 200 220#one should die
+ARGV		= 2 800 200 200 5#
 
 #n_philos, t_die, t_eat, t_sleep,
 CC			= cc
@@ -23,6 +22,7 @@ SRC			= 	main.c \
 				routine_2.c \
 				input_check.c \
 				threads_and_mutex.c \
+				threads_odd_even.c \
 				death_things.c \
 				time_utils.c
 
@@ -72,7 +72,7 @@ va: re
 
 
 hel: re
-	valgrind -s --tool=helgrind --show-below-main=yes ./$(NAME) $(ARGV)
+	valgrind --tool=helgrind ./$(NAME) $(ARGV)
 #valgrind \
 #--tool=helgrind \
 #-s \

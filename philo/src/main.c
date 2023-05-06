@@ -6,7 +6,7 @@
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 13:58:09 by qtran             #+#    #+#             */
-/*   Updated: 2023/04/17 14:16:19 by qtran            ###   ########.fr       */
+/*   Updated: 2023/04/26 15:26:21 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,29 @@ int	main(int ac, char **av)
 		return (0);
 	init_data(av, &data);
 	philos = malloc(sizeof(t_philo) * data.n_philos);
-	create_threads(&data, philos);
-	join_threads(&data);
-	destroy_all_mutex(&data);
-	free(philos);
-	free(data.th);
-	free(data.forks);
-	return (0);
+	if (philos == NULL || create_threads(&data, philos) != 0)
+		return (free_everything(&data, philos), 1);
+	if (join_n_threads(&data, data.n_philos) != 0
+		|| destroy_all_mutex(&data) != 0)
+		return (free_everything(&data, philos), 1);
+	return (free_everything(&data, philos), 0);
+}
+
+void	free_everything(t_data *data, t_philo *philos)
+{
+	if (data->th != NULL)
+	{
+		free(data->th);
+		data->th = NULL;
+	}
+	if (data->forks != NULL)
+	{
+		free(data->forks);
+		data->forks = NULL;
+	}
+	if (philos != NULL)
+	{
+		free(philos);
+		philos = NULL;
+	}
 }

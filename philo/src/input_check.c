@@ -6,13 +6,11 @@
 /*   By: qtran <qtran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 11:24:59 by qtran             #+#    #+#             */
-/*   Updated: 2023/04/14 16:55:05 by qtran            ###   ########.fr       */
+/*   Updated: 2023/04/26 09:13:19 by qtran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
-#include <limits.h>
-#include <stdio.h>
 
 static int	check_if_numeric(char c)
 {
@@ -21,17 +19,19 @@ static int	check_if_numeric(char c)
 	return (0);
 }
 
-int	check_int_len(const char *str)
+static int	check_int_validity(const char *str)
 {
 	long long int	n;
 
 	n = ft_atoi(str);
-	if (n > INT_MAX)
+	if (n > INT_MAX || ft_strlen(str) > 10)
 	{
 		printf("Bro why do u even try such a number did u know that max int"
 			"in ms is nearly 25 days!\n");
 		return (1);
 	}
+	else if (n == 0)
+		return (1);
 	return (0);
 }
 
@@ -53,7 +53,7 @@ int	input_check(char **av)
 			else
 				return (1);
 		}
-		if (check_int_len(av[i]))
+		if (check_int_validity(av[i]))
 			return (1);
 		i++;
 	}
